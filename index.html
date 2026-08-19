@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8" />
+    <title>grbn.nl</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+.old {
+background: radial-gradient(rgba(255,255,255,0) 0, rgba(255,255,255,.15) 30%, rgba(255,255,255,.3) 32%, rgba(255,255,255,0) 33%) 0 0,
+radial-gradient(rgba(255,255,255,0) 0, rgba(255,255,255,.1) 11%, rgba(255,255,255,.3) 13%, rgba(255,255,255,0) 14%) 0 0,
+radial-gradient(rgba(255,255,255,0) 0, rgba(255,255,255,.2) 17%, rgba(255,255,255,.43) 19%, rgba(255,255,255,0) 20%) 0 110px,
+radial-gradient(rgba(255,255,255,0) 0, rgba(255,255,255,.2) 11%, rgba(255,255,255,.4) 13%, rgba(255,255,255,0) 14%) -130px -170px,
+radial-gradient(rgba(255,255,255,0) 0, rgba(255,255,255,.2) 11%, rgba(255,255,255,.4) 13%, rgba(255,255,255,0) 14%) 130px 370px,
+radial-gradient(rgba(255,255,255,0) 0, rgba(255,255,255,.1) 11%, rgba(255,255,255,.2) 13%, rgba(255,255,255,0) 14%) 0 0,
+linear-gradient(45deg, #343702 0%, #184500 20%, #187546 30%, #006782 40%, #0b1284 50%, #760ea1 60%, #83096e 70%, #840b2a 80%, #b13e12 90%, #e27412 100%);
+background-size: 470px 470px, 970px 970px, 410px 410px, 610px 610px, 530px 530px, 730px 730px, 100% 100%;
+background-color: #840b2a;
+}
+body{
+background-color: rgb(2, 104, 115);
+background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.07) 50%, transparent 50%), linear-gradient(90deg, rgba(255, 255, 255, 0.13) 50%, transparent 50%), linear-gradient(90deg, transparent 50%, rgba(255, 255, 255, 0.17) 50%), linear-gradient(90deg, transparent 50%, rgba(255, 255, 255, 0.19) 50%);
+background-size: 13px auto, 29px auto, 37px auto, 53px auto;
+text-align: center;
+}
+
+h1 {
+    background-color: rgba(8, 79, 89, 0.6);
+    padding: 0.5em 0.8em;
+    text-align: center;
+    display: inline-block;
+    border-radius: 2em;
+    line-height: 1em;
+    box-shadow: 0 0 9px 0px rgba(255,255,255,07);
+    font-family: sans-serif;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    font-kerning: normal;
+
+    margin: 2em 0;
+    margin: 20vh 0 2em;
+    font-size: 1.8em;
+    font-size: 8vmin;
+}
+
+</style>
+</head>
+<body>
+<h1>Grbn</h1>
+</body>
+<script>
+(function()
+{
+    if (!window.DeviceMotionEvent)
+        return;
+
+    var element = document.querySelector('h1');
+    
+    var thresholdAngle = 0.40;//rad ~=17deg
+
+    element.style.transition='.1s ease-in';
+
+    var thresholdPassed = false;
+    var rotateHandler = function(e) {
+        var accelerationZ = e.accelerationIncludingGravity.z;
+        var orientation=window.orientation|0;
+        switch(orientation)
+        {
+            case 0: // portrait
+                var accelerationX = e.accelerationIncludingGravity.x;
+                var accelerationY = e.accelerationIncludingGravity.y;
+                break;  
+            case 90:  // landscape turned to left
+                var accelerationX = -e.accelerationIncludingGravity.y;
+                var accelerationY = e.accelerationIncludingGravity.x;
+                break;
+            case -90: // landscape turned to right  
+                var accelerationX = e.accelerationIncludingGravity.y;
+                var accelerationY = -e.accelerationIncludingGravity.x;
+                break;
+        }
+        var angle = Math.atan2(-accelerationX, -accelerationY);
+        if( !thresholdPassed && Math.abs(angle)<thresholdAngle )
+            return;
+        
+        thresholdPassed = true;
+        element.style.transform='rotate('+angle+'rad)';
+    } 
+    window.ondevicemotion=rotateHandler;
+    
+})();
+</script>
+</html>
