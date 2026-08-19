@@ -47,46 +47,4 @@ h1 {
 <body>
 <h1>Grbn</h1>
 </body>
-<script>
-(function()
-{
-    if (!window.DeviceMotionEvent)
-        return;
-
-    var element = document.querySelector('h1');
-    
-    var thresholdAngle = 0.40;//rad ~=17deg
-
-    element.style.transition='.1s ease-in';
-
-    var thresholdPassed = false;
-    var rotateHandler = function(e) {
-        var accelerationZ = e.accelerationIncludingGravity.z;
-        var orientation=window.orientation|0;
-        switch(orientation)
-        {
-            case 0: // portrait
-                var accelerationX = e.accelerationIncludingGravity.x;
-                var accelerationY = e.accelerationIncludingGravity.y;
-                break;  
-            case 90:  // landscape turned to left
-                var accelerationX = -e.accelerationIncludingGravity.y;
-                var accelerationY = e.accelerationIncludingGravity.x;
-                break;
-            case -90: // landscape turned to right  
-                var accelerationX = e.accelerationIncludingGravity.y;
-                var accelerationY = -e.accelerationIncludingGravity.x;
-                break;
-        }
-        var angle = Math.atan2(-accelerationX, -accelerationY);
-        if( !thresholdPassed && Math.abs(angle)<thresholdAngle )
-            return;
-        
-        thresholdPassed = true;
-        element.style.transform='rotate('+angle+'rad)';
-    } 
-    window.ondevicemotion=rotateHandler;
-    
-})();
-</script>
 </html>
